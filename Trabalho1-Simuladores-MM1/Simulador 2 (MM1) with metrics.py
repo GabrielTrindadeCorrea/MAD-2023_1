@@ -153,7 +153,7 @@ samples_w, mean_w, std_w, precision_w = metrics(waits)
 
 # this block prints customers serviced and average waiting time
 print(f"Number of customers serviced (samples): {samples_w}")
-print(f"Average Waiting Time: {mean_w:08.4f}")
+print(f"Average Waiting Time: {mean_w:08.4f}s")
 
 # this block gets the confidence interval and prints it
 ciMin_w, ciMax_w = confidenceInterval(samples_w, mean_w, std_w, precision_w)
