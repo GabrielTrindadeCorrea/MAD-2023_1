@@ -36,7 +36,7 @@ def confidenceInterval(samples, mean, std, precision):
     maxCI = mean + (precision * (std / math.sqrt(samples) ))
     return minCI, maxCI
 
-MAXITERATION = 1000
+MAXITERATION = 10000
 # Starts the main simulation loop, which iterates MAXITERATION times or until there are no more events in the queue.
 for i in range(MAXITERATION):
 
