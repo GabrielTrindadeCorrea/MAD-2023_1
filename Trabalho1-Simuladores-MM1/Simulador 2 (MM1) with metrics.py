@@ -4,6 +4,7 @@
 
 import numpy as np
 import math
+import matplotlib.pyplot as plt
 
 # Sets the random number generator seed to 1
 np.random.seed(1)
@@ -168,3 +169,21 @@ print(f"Average number of customers in the system: {mean_c:08.4f} customers")
 # this block gets the confidence interval and prints it
 ciMin_c, ciMax_c = confidenceInterval(samples_c, mean_c, std_c, precision_c)
 print(f"Confidence Interval: [{ciMin_c:08.4f}, {ciMax_c:08.4f}]")
+
+#this block creates a bar graph of waiting time per customer serviced
+print("\nCreating Waiting Time bar plot...\n")
+x_w = list(range(0, len(waits)))
+plt.bar(x_w, waits, color ='blue',width = 0.7)
+plt.xlabel("Customers serviced")
+plt.ylabel("Waiting time in seconds")
+plt.title("Waiting time per customer serviced")
+plt.show()
+
+#this block creates a bar graph of number of customers in the system per iteration of the simulator
+print("Creating Customer in System bar plot...")
+x_c = list(range(0, len(customers)))
+plt.bar(x_c, customers, color ='blue',width = 0.7)
+plt.xlabel("Iteration of simulator loop")
+plt.ylabel("Number of customers in the system")
+plt.title("Number of customers per iteration")
+plt.show()
