@@ -20,7 +20,7 @@ def confidenceInterval(list):
     maxCI = np.mean(list) + (1.96 * (np.std(list) / math.sqrt(len(list)) ))
     return minCI, maxCI
 
-# this function calculates number of busy periods, their average, confidence interval and if expected values are within the interval 
+# this function calculates number of times to 1 client, their average, confidence interval and if expected values are within the interval 
 def metricsTimeToLastClient(list, c):
 
     expectedValue = (c*ABP) - ABP       # E(U_C) = C*E(B_C) - E(B_C) according to mathematical analysis of Question 2.2
