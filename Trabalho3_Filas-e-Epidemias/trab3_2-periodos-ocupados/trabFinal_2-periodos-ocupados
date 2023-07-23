@@ -105,20 +105,21 @@ def simulatorMM1(lambda_mm1, mu_mm1, show_messages = False, show_metrics = True,
 
 if __name__ == "__main__":
 
-    '''
+    #'''
     # 1st Case: Lambda = 1, Mu = 2, Rho = 0.5
     print("\n1st Case: Lambda = 1, Mu = 2, Rho = 0.5")
     simulatorMM1(lambda_mm1=1, mu_mm1=2, initial_customers=1, show_messages=False, show_plots=True, max_iterations = 10000)
     print("--------------------------------------------------------\n")
     #'''
 
-    '''
+    #'''
     # 2nd Case: Lambda = 2, Mu = 4, Rho = 0.5
     print("2nd Case: Lambda = 2, Mu = 4, Rho = 0.5")
     simulatorMM1(lambda_mm1=2, mu_mm1=4, initial_customers=1, show_messages=False, show_plots=True, max_iterations = 10000)
     print("--------------------------------------------------------\n")
     #'''
 
+    #'''
     # 3rd Case: Lambda = 4, Mu = 2, Rho = 2
     print("3rd Case: Lambda = 4, Mu = 2, Rho = 2")
     simulatorMM1(lambda_mm1=4, mu_mm1=2, initial_customers=1, show_messages=False, show_plots=False, max_iterations = 10000)
