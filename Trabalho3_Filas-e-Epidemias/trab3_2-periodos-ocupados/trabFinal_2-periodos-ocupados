@@ -77,14 +77,14 @@ def simulatorMM1(lambda_mm1, mu_mm1, show_messages = False, show_metrics = True,
     # Show metrics about sampled busy periods
     if(show_metrics):
         print(f"Number of busy periods of server (samples): {len(busy_periods)}")
-        print(f"Average Busy Period: {np.mean(busy_periods):.4f}")
+        print(f"Sampled average Busy Period: {np.mean(busy_periods):.4f}")
         ciMin, ciMax = confidenceInterval(busy_periods)
         print(f"Confidence Interval: [{ciMin:.4f}, {ciMax:.4f}]")
 
         if(not lambda_mm1<mu_mm1):
             print("[Arrivals] are faster than [Services], queue will grow indefinitely long!\n")
         else:
-            print(f"Average Busy Period according to ((1/mu)/(1-rho)): {avg_busy_period}")
+            print(f"Analytical average Busy Period according to ((1/mu)/(1-rho)): {avg_busy_period}")
             success = ciMin<=avg_busy_period<=ciMax
             if(success):
                 print(f"Success. Expected value {avg_busy_period} within confidence interval.\n")
