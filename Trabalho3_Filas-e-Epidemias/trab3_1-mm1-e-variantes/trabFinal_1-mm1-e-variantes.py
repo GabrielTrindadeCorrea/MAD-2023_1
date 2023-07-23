@@ -145,7 +145,7 @@ def simulatorMM1(lambda_mm1, mu_mm1, show_messages = False, show_metrics = True,
 # Main function
 if __name__ == "__main__":
 
-    #S'''
+    #'''
     # 1st Case: Lambda = 1, Mu = 2, Rho = 0.5
     print("\n1st Case: Lambda = 1, Mu = 2, Rho = 0.5")
     wait_times, num_customers = simulatorMM1(lambda_mm1=1, mu_mm1=2, show_plots = True)
