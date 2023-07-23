@@ -1,0 +1,126 @@
+# M/M/1
+# Arrival defined by a Poisson process
+# Service defined by a exponential distribution
+
+import matplotlib.pyplot as plt
+import numpy as np
+import math
+from collections import deque
+from time import time
+
+# This function calculates confidence interval
+# Requires numpy and math libraries
+def confidenceInterval(list):
+    #import numpy as np
+    #import math
+    firstTerm = np.mean(list)
+    secondTerm = (1.96 * (np.std(list) / math.sqrt(len(list)) ))
+    minCI = firstTerm - secondTerm
+    maxCI = firstTerm + secondTerm
+    return minCI, maxCI
+
+# This function realizes a M/M/1 simulation
+# Max iterations and initial number of customers have default values
+def simulatorMM1(lambda_mm1, mu_mm1, show_messages = False, show_metrics = True, show_plots = False, max_iterations = 10000, initial_customers = 0):
+    
+    # Initializes the simulation time, number of customers, rho and random number generator
+    simultime = 0
+    num_customers = initial_customers
+    rho_mm1 = lambda_mm1/mu_mm1
+    rng = np.random.default_rng()
+
+    # Auxiliary list for analysis of average busy period and analytical average busy period
+    busy_periods = []
+    avg_busy_period = (1/mu_mm1)/(1-rho_mm1)
+
+    # Variables defining parameters of arrival and departure
+    # Numpy exponential function uses the scale parameter, which is the inverse of the rate parameter (in this case lambda and mu) 
+    # <https://numpy.org/doc/stable/reference/random/generated/numpy.random.Generator.exponential.html#numpy.random.Generator.exponential>
+    arrival_scale = 1/lambda_mm1           
+    departure_scale = 1/mu_mm1
+                 
+
+    print(f"\nBeginning M/M/1 simulator with {num_customers} customer(s).")
+    start_time = time()
+
+    # Starts the main simulation loop, which iterates until the max iterations is reached.
+    for iteration in range(max_iterations):
+
+        # this block get samples exponentially distributed by the variables arrival_scale or departure_scale
+        # while arrivals occur according to a Poisson process, time between Poisson arrivals is exponential distribution
+        time_of_arrival = rng.exponential(arrival_scale)
+        time_of_departure = rng.exponential(departure_scale)
+
+        if (num_customers==0 or time_of_arrival < time_of_departure):
+            simultime += time_of_arrival
+            if(show_messages):
+                print(f"{iteration}: [{simultime:08.4f}] {'arrival':>10}, {num_customers} => {num_customers + 1}")       # This block prints out a message indicating the arrival,
+            num_customers += 1                                                      # updates the number of customers in the system
+
+        else:
+            simultime += time_of_departure
+            if(show_messages):
+                print(f"{iteration}: [{simultime:08.4f}] {'departure':>10}, {num_customers} => {num_customers - 1}")     # This block prints out a message indicating the departure,
+            num_customers -= 1                                                      # updates the number of customers in the system
+
+            # This block is executed when server is emptied, meaning when a busy period ends
+            if(num_customers==0):
+                if(not lambda_mm1<mu_mm1):          # For better visualization, because of very small sample pool for these cases
+                    print(f"{iteration}: [{simultime:08.4f}] --> SERVER REACHED ZERO CUSTOMERS")
+                busy_periods.append(simultime)      # Register busy period for later analysis
+                simultime = 0                       # Restore initial conditions of simultime
+                num_customers = 1                   # Restore initial conditions of customer number according the definition of Topic 2
+
+    end_time = time()
+    print(f"\nMax iteration number ({max_iterations}) reached. End of simulation. Duration of {(end_time-start_time):.4} seconds.\n")
+
+    # Show metrics about sampled busy periods
+    if(show_metrics):
+        print(f"Number of busy periods of server (samples): {len(busy_periods)}")
+        print(f"Average Busy Period: {np.mean(busy_periods):.4f}")
+        ciMin, ciMax = confidenceInterval(busy_periods)
+        print(f"Confidence Interval: [{ciMin:.4f}, {ciMax:.4f}]")
+
+        if(not lambda_mm1<mu_mm1):
+            print("[Arrivals] are faster than [Services], queue will grow indefinitely long!\n")
+        else:
+            print(f"Average Busy Period according to ((1/mu)/(1-rho)): {avg_busy_period}")
+            success = ciMin<=avg_busy_period<=ciMax
+            if(success):
+                print(f"Success. Expected value {avg_busy_period} within confidence interval.\n")
+            else:
+                print(f"Failure. Expected value {avg_busy_period} NOT within confidence interval.\n")
+
+    # Show plot about sampled busy periods
+    if(show_plots):
+        print(f"Creating Busy Periods bar graph with Lambda = {lambda_mm1}, Mu = {mu_mm1}, Rho = {rho_mm1}\n")
+        x_c = list(range(0, len(busy_periods)))
+        plt.bar(x_c, busy_periods, color ='blue',width = 0.7)
+        plt.xlabel("Busy Periods")
+        plt.ylabel("Simulation Time")
+        plt.title(f"Registered Busy Periods: Lambda = {lambda_mm1}, Mu = {mu_mm1}, Rho = {rho_mm1}")
+        plt.show()
+
+    return busy_periods
+
+if __name__ == "__main__":
+
+    '''
+    # 1st Case: Lambda = 1, Mu = 2, Rho = 0.5
+    print("\n1st Case: Lambda = 1, Mu = 2, Rho = 0.5")
+    simulatorMM1(lambda_mm1=1, mu_mm1=2, initial_customers=1, show_messages=False, show_plots=True, max_iterations = 10000)
+    print("--------------------------------------------------------\n")
+    #'''
+
+    '''
+    # 2nd Case: Lambda = 2, Mu = 4, Rho = 0.5
+    print("2nd Case: Lambda = 2, Mu = 4, Rho = 0.5")
+    simulatorMM1(lambda_mm1=2, mu_mm1=4, initial_customers=1, show_messages=False, show_plots=True, max_iterations = 10000)
+    print("--------------------------------------------------------\n")
+    #'''
+
+    # 3rd Case: Lambda = 4, Mu = 2, Rho = 2
+    print("3rd Case: Lambda = 4, Mu = 2, Rho = 2")
+    simulatorMM1(lambda_mm1=4, mu_mm1=2, initial_customers=1, show_messages=False, show_plots=False, max_iterations = 10000)
+    print("--------------------------------------------------------\n")
+    #'''
