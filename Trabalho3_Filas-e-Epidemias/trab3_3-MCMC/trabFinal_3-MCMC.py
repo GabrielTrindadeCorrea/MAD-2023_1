@@ -60,6 +60,9 @@ def acceptance_ratio(trace, current_rho, proposed_rho):
 def metropolis_hastings(trace, iterations):
     rho_values = []
     current_rho = np.random.uniform(0, 1)  # Initialize rho randomly within [0, 1]
+    #current_rho = 0.2
+    #current_rho = 0.9
+    #current_rho = 0.5
 
     for _ in range(iterations):
         # Propose a new rho using the proposal function
@@ -86,6 +89,9 @@ iterations = 10000
 # Perform MCMC to estimate rho
 rho_samples = metropolis_hastings(trace, iterations)
 
+
+#-----------------------------------------------------------------------------------------
+
 # Generate a histogram to show the estimated distribution of rho
 plt.hist(rho_samples, bins=30, density=True, alpha=0.6)
 plt.xlabel("Utilization Factor (ρ)")
@@ -96,6 +102,8 @@ plt.show()
 # Calculate and print the mean and variance of the estimated rho values
 mean_rho = np.mean(rho_samples)
 var_rho = np.var(rho_samples)
+estimated_rho = rho_samples[-1]
+print(f"Estimated Value of ρ: {estimated_rho:.4f}")
 print(f"Estimated Mean of ρ: {mean_rho:.4f}")
 print(f"Estimated Variance of ρ: {var_rho:.4f}")
 
